@@ -1,0 +1,47 @@
+# Environment & Secrets (TUYỆT ĐỐI KHÔNG PUSH)
+.env
+*.env
+.env.*
+!.env.example
+settings.json
+*.key
+
+# Database Local SQLite
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Python Cache & Virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Build artifacts & Binaries
+build/
+dist/
+Cai_Dat/
+*.exe
+*.msi
+*.zip
+*.tar.gz
+
+# Report outputs
+Bao_Cao_Xuat/
+*.csv
+*.xlsx
+
+# Editor & IDE configs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

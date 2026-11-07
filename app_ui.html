@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derm Keyword Hunter - Desktop Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables - DARK THEME (Mặc định) */
+        :root[data-theme="dark"] {
+            --bg-body: #0a0e17;
+            --bg-navbar: rgba(13, 19, 31, 0.85);
+            --bg-card: rgba(20, 27, 44, 0.65);
+            --bg-card-hover: rgba(28, 38, 60, 0.85);
+            --bg-input: rgba(10, 14, 23, 0.8);
+            --bg-console: #070a10;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(16, 185, 129, 0.4);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --tag-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        /* CSS Variables - LIGHT THEME (Giao diện Sáng) */
+        :root[data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-navbar: rgba(255, 255, 255, 0.9);
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --bg-input: #ffffff;
+            --bg-console: #0f172a;
+            --border: #e2e8f0;
+            --border-hover: rgba(16, 185, 129, 0.6);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --tag-bg: #f1f5f9;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.25);
+            --accent-blue: #38bdf8;
+            --accent-gold: #f59e0b;
+            --accent-purple: #a855f7;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            height: 68px;
+            background: var(--bg-navbar);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 100;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 0 16px var(--primary-glow);
+        }
+
+        .brand-title {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .model-badge {
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-main);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 10px var(--primary-glow);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .theme-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-btn:hover {
+            color: var(--text-main);
+            border-color: var(--border-hover);
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            font-weight: 600;
+        }
+
+        .nav-status.dry {
+            color: var(--accent-gold);
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* Main View Container */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 20px 28px;
+            height: 100%;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+        }
+
+        .metric-icon {
+            font-size: 15px;
+            opacity: 0.8;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .metric-card.gold .metric-value { color: var(--accent-gold); }
+        .metric-card.green .metric-value { color: var(--primary); }
+        .metric-card.blue .metric-value { color: var(--accent-blue); }
+
+        /* Prompt Panel (AI Custom Semantic Prompt) */
+        .prompt-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .prompt-panel:focus-within {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+        }
+
+        .prompt-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .prompt-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .prompt-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--accent-purple);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .preset-clear-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .preset-clear-btn:hover {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .prompt-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-family: inherit;
+            line-height: 1.45;
+            resize: vertical;
+            min-height: 52px;
+            outline: none;
+        }
+
+        .prompt-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .prompt-presets {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .preset-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preset-pill {
+            padding: 3px 9px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--tag-bg);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preset-pill:hover {
+            color: var(--text-main);
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .slider-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .slider-header b {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 4px;
+            background: var(--border);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 10px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            box-shadow: 0 3px 12px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--tag-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Log Console (Rich HTML Activity Feed) */
+        .console-container {
+            background: var(--bg-console);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 460px);
+            min-height: 230px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .console-header {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .console-body {
+            flex: 1;
+            padding: 12px 16px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', -apple-system, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            user-select: text;
+        }
+
+        /* Structured HTML Log Components */
+        .log-phase-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 6px 0 2px 0;
+            font-weight: 700;
+        }
+
+        .log-phase-banner.t1 {
+            background: rgba(56, 189, 248, 0.12);
+            border-left: 4px solid var(--accent-blue);
+            color: #e0f2fe;
+        }
+
+        .log-phase-banner.t2 {
+            background: rgba(168, 85, 247, 0.12);
+            border-left: 4px solid var(--accent-purple);
+            color: #f3e8ff;
+        }
+
+        .log-phase-banner.t3 {
+            background: rgba(16, 185, 129, 0.12);
+            border-left: 4px solid var(--primary);
+            color: #d1fae5;
+        }
+
+        .log-phase-banner.done {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(245, 158, 11, 0.15));
+            border-left: 4px solid var(--accent-gold);
+            color: #fef3c7;
+        }
+
+        .phase-tag {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.5px;
+        }
+
+        .phase-title {
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .log-prompt-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px dashed rgba(245, 158, 11, 0.4);
+            border-radius: 8px;
+            padding: 7px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin: 2px 0;
+        }
+
+        .log-opp-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            transition: all 0.15s ease;
+        }
+
+        .log-opp-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-hover);
+        }
+
+        .log-idx {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 600;
+            min-width: 42px;
+        }
+
+        .log-kw {
+            color: var(--accent-blue);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .log-score {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .log-score.gold {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .log-score.green {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--primary);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .log-score.dim {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .log-sell-tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .log-sell-tag.sell-yes {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--primary);
+        }
+
+        .log-sell-tag.sell-no {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .log-entity {
+            color: var(--text-main);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 320px;
+        }
+
+        .log-seed-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 2px 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .seed-idx { color: var(--text-dim); }
+        .seed-text { color: var(--text-main); font-weight: 500; }
+        .seed-badge {
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--accent-blue);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .log-line {
+            display: flex;
+            gap: 8px;
+            padding: 2px 4px;
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .log-time {
+            color: var(--text-dim);
+            font-size: 10px;
+            min-width: 48px;
+        }
+
+        .log-switch-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(56, 189, 248, 0.15));
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 6px 0;
+            color: var(--text-main);
+        }
+
+        /* Opportunities View & Topic Filter */
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 18px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-card);
+            flex-wrap: wrap;
+        }
+
+        .filter-group-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 380px;
+        }
+
+        .topic-filter-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topic-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .topic-dropdown {
+            padding: 8px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 12.5px;
+            font-weight: 600;
+            outline: none;
+            min-width: 200px;
+            max-width: 280px;
+            cursor: pointer;
+        }
+
+        .topic-dropdown:focus {
+            border-color: var(--primary);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .filter-group-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .delete-topic-btn {
+            color: var(--danger) !important;
+            border-color: rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .delete-topic-btn:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border-color: var(--danger) !important;
+        }
+
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: calc(100vh - 195px);
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .opp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.2s ease;
+        }
+
+        .opp-card:hover {
+            border-color: var(--border-hover);
+            transform: translateX(2px);
+        }
+
+        .opp-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .opp-title-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-score {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--accent-gold);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-score.high {
+            background: rgba(245, 158, 11, 0.18);
+            border-color: var(--accent-gold);
+        }
+
+        .opp-entity-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .opp-badges {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-tag {
+            font-size: 10.5px;
+            font-weight: 600;
+            background: var(--tag-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        .badge-topic {
+            font-size: 10.5px;
+            font-weight: 600;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        .opp-keyword {
+            font-size: 12.5px;
+            color: var(--accent-blue);
+            font-style: italic;
+        }
+
+        .opp-summary {
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            user-select: text;
+        }
+
+        /* Settings View */
+        .settings-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .form-group .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Export Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px 28px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-path-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .path-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .path-text {
+            font-size: 12.5px;
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+            word-break: break-all;
+            user-select: text;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <div class="brand-box">
+            <div class="brand-icon">🌿</div>
+            <div>
+                <div class="brand-title">
+                    <span>DERM KEYWORD HUNTER</span>
+                    <span class="model-badge">Gemini 3.8 Flash</span>
+                </div>
+                <div class="brand-subtitle">Bộ công cụ đãi vàng từ khóa • SQLite Local Storage</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button id="nav-btn-dashboard" class="nav-btn active" onclick="switchTab('dashboard')">
+                <span>🚀</span> Chạy Pipeline
+            </button>
+            <button id="nav-btn-database" class="nav-btn" onclick="switchTab('database')">
+                <span>💎</span> Kho Cơ Hội Vàng
+            </button>
+            <button id="nav-btn-settings" class="nav-btn" onclick="switchTab('settings')">
+                <span>⚙️</span> Cài Đặt Hệ Thống
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <button id="themeToggleBtn" class="theme-btn" onclick="toggleTheme()">
+                <span id="themeIcon">☀️</span>
+                <span id="themeText">Giao diện Sáng</span>
+            </button>
+
+            <div id="statusBadge" class="nav-status">
+                <div class="status-dot"></div>
+                <span id="statusText">Đang kiểm tra...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main View Container -->
+    <div class="content-area">
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-pane active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Từ Khóa Thô</span>
+                        <span class="metric-icon">📥</span>
+                    </div>
+                    <div id="mRaw" class="metric-value">0</div>
+                </div>
+                <div class="metric-card blue">
+                    <div class="metric-header">
+                        <span class="metric-label">Sweet Spot Lọt Lưới</span>
+                        <span class="metric-icon">🎯</span>
+                    </div>
+                    <div id="mFiltered" class="metric-value">0</div>
+                </div>
+                <div class="metric-card green">
+                    <div class="metric-header">
+                        <span class="metric-label">Đã Phân Tích AI</span>
+                        <span class="metric-icon">🤖</span>
+                    </div>
+                    <div id="mAnalyzed" class="metric-value">0</div>
+                </div>
+                <div class="metric-card gold">
+                    <div class="metric-header">
+                        <span class="metric-label">Cơ Hội Vàng (≥ 7.0)</span>
+                        <span class="metric-icon">💎</span>
+                    </div>
+                    <div id="mGems" class="metric-value">0</div>
+                </div>
+            </div>
+
+            <!-- AI Custom Semantic Prompt Panel -->
+            <div class="prompt-panel">
+                <div class="prompt-header">
+                    <div class="prompt-title">
+                        <span>🎯 ĐỊNH HƯỚNG PHÂN TÍCH & BÓC TÁCH TỪ KHÓA (CUSTOM PROMPT)</span>
+                        <span class="prompt-badge">AI Semantic Focus</span>
+                    </div>
+                    <button class="preset-clear-btn" onclick="clearCustomPrompt()">✕ Xóa trắng</button>
+                </div>
+                <div class="prompt-input-wrapper">
+                    <textarea id="customPromptInput" class="prompt-textarea" rows="2" placeholder="Nhập ngôn ngữ tự nhiên về vấn đề da bạn muốn tập trung (Ví dụ: peel da, trị mụn, viêm nang lông ở mông, Urea 20%, an toàn mẹ bầu...)..."></textarea>
+                </div>
+                <div class="prompt-presets">
+                    <span class="preset-label">Gợi ý nhanh:</span>
+                    <button class="preset-pill" onclick="applyPromptPreset('viem_nang_long')">🌿 Viêm nang lông & Mụn lưng</button>
+                    <button class="preset-pill" onclick="applyPromptPreset('ran_da_bau')">🤰 Rạn da & Thâm body mẹ bầu</button>
+                    <button class="preset-pill" onclick="applyPromptPreset('thuoc_cham_vaynen')">💊 Thuốc da liễu (Chàm / Vảy nến / Nấm)</button>
+                    <button class="preset-pill" onclick="applyPromptPreset('duong_trang_kem_body')">✨ Dưỡng trắng & Trị sần da rắn (Urea/AHA)</button>
+                    <button class="preset-pill" onclick="applyPromptPreset('peel_da_tri_mun')">🧪 Peel da hóa học & Trị mụn thâm</button>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="control-group">
+                    <div class="slider-box">
+                        <div class="slider-header">
+                            <span>Số hạt giống Modifier Matrix:</span>
+                            <b id="valSeeds">20 hạt giống</b>
+                        </div>
+                        <input type="range" id="sliderSeeds" min="10" max="60" step="5" value="20" oninput="document.getElementById('valSeeds').innerText = this.value + ' hạt giống'">
+                    </div>
+
+                    <div class="slider-box">
+                        <div class="slider-header">
+                            <span>Giới hạn phân tích AI mỗi đợt:</span>
+                            <b id="valAi">15 từ khóa</b>
+                        </div>
+                        <input type="range" id="sliderAi" min="5" max="40" step="5" value="15" oninput="document.getElementById('valAi').innerText = this.value + ' từ khóa'">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="btnRunAll" class="btn btn-primary" onclick="startFullPipeline()">
+                        <span id="runSpinner" style="display: none;" class="spinner"></span>
+                        <span id="runText">▶ CHẠY TOÀN BỘ 4 TẦNG</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportCsv()">
+                        📊 Xuất CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="console-container">
+                <div class="console-header">
+                    <span>📋 NHẬT KÝ THỰC THI THỜI GIAN THỰC (LIVE ACTIVITY FEED):</span>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 11px;" onclick="clearConsole()">Xóa Log</button>
+                    </div>
+                </div>
+                <div id="consoleBody" class="console-body">
+                    <div class="log-phase-banner t3">
+                        <span class="phase-tag">SẴN SÀNG</span>
+                        <span class="phase-title">=== HỆ THỐNG ĐÃ SẴN SÀNG • GEMINI 3.8 FLASH ===</span>
+                    </div>
+                    <div class="log-line">
+                        <span class="log-time">INFO</span>
+                        <span>Nhập Custom Prompt hoặc nhấn "CHẠY TOÀN BỘ 4 TẦNG" để bắt đầu quét và phân tích.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DATABASE VIEW -->
+        <div id="tab-database" class="tab-pane">
+            <div class="filter-row">
+                <div class="filter-group-left">
+                    <div class="topic-filter-box">
+                        <span class="topic-label">📁 Chủ đề:</span>
+                        <select id="selectTopicFilter" class="topic-dropdown" onchange="loadOpportunities()">
+                            <option value="all">💎 Tất cả chủ đề (Toàn bộ)</option>
+                        </select>
+                    </div>
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm sản phẩm, từ khóa..." onkeyup="if(event.key === 'Enter') loadOpportunities()">
+                </div>
+                
+                <div class="filter-group-right">
+                    <span style="font-size: 12.5px; color: var(--text-muted); white-space: nowrap;">Điểm: <b id="valMinScore" style="color: var(--accent-gold)">≥ 6.0</b></span>
+                    <input type="range" id="sliderScore" min="1" max="9" step="1" value="6" style="width: 90px;" oninput="document.getElementById('valMinScore').innerText = '≥ ' + this.value + '.0'; loadOpportunities()">
+                    <button class="btn btn-secondary" onclick="loadOpportunities()">🔄 Làm Mới</button>
+                    <button class="btn btn-primary" onclick="exportCsv()">📊 Xuất File Excel/CSV</button>
+                    <button class="btn btn-secondary delete-topic-btn" title="Xóa đợt quét đang chọn" onclick="deleteCurrentTopic()">🗑️ Xóa Đợt Này</button>
+                </div>
+            </div>
+
+            <div id="cardsList" class="cards-list">
+                <!-- Danh sách sản phẩm load động -->
+            </div>
+        </div>
+
+        <!-- TAB 3: SETTINGS -->
+        <div id="tab-settings" class="tab-pane">
+            <div class="settings-card">
+                <h3 style="color: var(--primary); font-size: 15px; margin-bottom: 2px;">⚙️ CẤU HÌNH HỆ THỐNG & API</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Thông số được lưu trữ bảo mật trong file .env cục bộ trên máy tính của bạn.</p>
+
+                <div class="form-group">
+                    <label>Google Gemini API Key</label>
+                    <div class="form-hint">Nhập khóa API nhận từ Google AI Studio. Nếu để trống, hệ thống sẽ chạy ở chế độ kiểm thử Heuristic.</div>
+                    <div class="input-row">
+                        <input type="password" id="inputGeminiKey" class="form-input" placeholder="AIzaSy...">
+                        <button class="btn btn-secondary" onclick="togglePassword('inputGeminiKey')">Hiện</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mô hình AI mặc định (Model)</label>
+                    <select id="selectModel" class="form-input">
+                        <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (High) - [Mặc định]</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Serper.dev API Key (Tùy chọn)</label>
+                    <div class="form-hint">Dùng để trích xuất Top 5 SERP Google. Nếu để trống, Gemini sẽ tự động dùng Google Search Grounding miễn phí.</div>
+                    <input type="text" id="inputSerperKey" class="form-input" placeholder="Optional Serper API key...">
+                </div>
+
+                <div class="form-group">
+                    <label>Cơ sở dữ liệu SQLite Local</label>
+                    <div class="form-hint" id="dbPathHint">Vị trí: product_opportunities.db</div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <button class="btn btn-primary" onclick="saveSettings()">💾 Lưu Cài Đặt</button>
+                    <button class="btn btn-secondary" onclick="openDatabaseFolder()">📂 Mở Thư Mục Báo Cáo / DB</button>
+                    <button class="btn btn-secondary" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);" onclick="resetDatabase()">🗑️ Xóa Trắng Toàn Bộ DB</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Success Modal -->
+    <div id="exportModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>✅</span>
+                    <span>XUẤT BÁO CÁO THÀNH CÔNG!</span>
+                </div>
+                <button class="modal-close-btn" onclick="closeExportModal()">✕</button>
+            </div>
+            
+            <p style="font-size: 13px; color: var(--text-muted);">Dữ liệu cơ hội từ khóa đã được xuất đầy đủ ra file CSV chuẩn UTF-8 BOM (tương thích 100% với Excel).</p>
+            
+            <div class="modal-path-box">
+                <span class="path-label">📁 Thư mục lưu trữ:</span>
+                <span id="exportFolderText" class="path-text">...</span>
+            </div>
+
+            <div class="modal-path-box">
+                <span class="path-label">📄 Tên file đã xuất:</span>
+                <span id="exportFileText" class="path-text" style="color: var(--primary); font-weight: 700;">...</span>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeExportModal()">Đóng</button>
+                <button class="btn btn-secondary" onclick="openExportFolder()">📂 Mở Thư Mục</button>
+                <button class="btn btn-primary" onclick="openExportedFile()">📊 Mở File Excel Ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRunning = false;
+        let activeSessionId = 'all';
+        let latestExportedPath = '';
+        let latestExportedFolder = '';
+
+        const PROMPT_PRESETS = {
+            'viem_nang_long': 'Tập trung sâu vào các vấn đề viêm nang lông, sừng hóa nang lông (keratosis pilaris) ở bắp tay, mụn thâm ở lưng và mông. Ưu tiên các sản phẩm chứa AHA, BHA, Salicylic Acid, Urea, Tea Tree Oil. Loại bỏ các sản phẩm chỉ dành cho da mặt.',
+            'ran_da_bau': 'Tập trung vào giải pháp trị rạn da và mờ thâm nách/bẹn/bụng sau sinh hoặc trong thai kỳ. Yêu cầu sản phẩm hoặc thành phần an toàn cho mẹ bầu và cho con bú (dầu dưỡng hạt tầm xuân, rau má, peptides, bơ hạt mỡ).',
+            'thuoc_cham_vaynen': 'Tìm kiếm các loại thuốc bôi và dược mỹ phẩm đặc trị các bệnh da liễu mãn tính: Chàm (Eczema), Viêm da cơ địa, Vảy nến, Hắc lào, Lang ben, Nấm da. Phân tích cả thuốc kê đơn và kem bôi phục hồi không chứa corticoid.',
+            'duong_trang_kem_body': 'Tập trung vào kem body và serum dưỡng trắng da cơ thể, trị thâm đầu gối, cùi chỏ, trị da rắn vảy cá sần sùi khô ráp. Ưu tiên hoạt chất Urea 10%-20%, Niacinamide, Arbutin, Retinol body.',
+            'peel_da_tri_mun': 'Tập trung vào các giải pháp peel da hóa học, serum peel trị mụn bọc, mụn ẩn, mụn lưng cơ thể (BHA Salicylic Acid, AHA Glycolic Acid, Mandelic, TCA). Tìm các sản phẩm peel an toàn tại nhà hoặc kem phục hồi sau peel.'
+        };
+
+        function applyPromptPreset(key) {
+            const input = document.getElementById('customPromptInput');
+            if (PROMPT_PRESETS[key]) {
+                input.value = PROMPT_PRESETS[key];
+                input.focus();
+            }
+        }
+
+        function clearCustomPrompt() {
+            const input = document.getElementById('customPromptInput');
+            input.value = '';
+            input.focus();
+        }
+
+        // Chuyển đổi giao diện Sáng / Tối
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('derm_theme', newTheme);
+
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            if (newTheme === 'dark') {
+                icon.innerText = '☀️';
+                text.innerText = 'Giao diện Sáng';
+            } else {
+                icon.innerText = '🌙';
+                text.innerText = 'Giao diện Tối';
+            }
+        }
+
+        (function initTheme() {
+            const saved = localStorage.getItem('derm_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            window.addEventListener('DOMContentLoaded', () => {
+                const icon = document.getElementById('themeIcon');
+                const text = document.getElementById('themeText');
+                if (saved === 'dark') {
+                    if (icon) icon.innerText = '☀️';
+                    if (text) text.innerText = 'Giao diện Sáng';
+                } else {
+                    if (icon) icon.innerText = '🌙';
+                    if (text) text.innerText = 'Giao diện Tối';
+                }
+            });
+        })();
+
+        function switchTab(tabId) {
+            try {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                
+                const activeBtn = document.getElementById('nav-btn-' + tabId);
+                if (activeBtn) activeBtn.classList.add('active');
+                
+                const targetPane = document.getElementById('tab-' + tabId);
+                if (targetPane) targetPane.classList.add('active');
+
+                if (tabId === 'dashboard') {
+                    refreshStats();
+                } else if (tabId === 'database') {
+                    loadTopics().then(() => loadOpportunities()).catch(err => console.error(err));
+                }
+            } catch (err) {
+                console.error('Error switching tab:', err);
+            }
+        }
+
+        function getTimeStr() {
+            const d = new Date();
+            return d.toTimeString().split(' ')[0];
+        }
+
+        // PARSER & FORMATTER: BIẾN CONSOLE RAW TEXT THÀNH GIAO DIỆN HTML ĐẸP MẮT
+        function appendLog(rawText) {
+            try {
+                if (!rawText || typeof rawText !== 'string' || !rawText.trim()) return;
+                const el = document.getElementById('consoleBody');
+                if (!el) return;
+                const lines = rawText.split('\n');
+
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+
+                const time = getTimeStr();
+
+                // 1. Phân tầng Pipeline Banners
+                if (trimmed.includes('[TẦNG 1 - DATA INGESTION]')) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-phase-banner t1">
+                            <span class="phase-tag">TẦNG 1</span>
+                            <span class="phase-title">🚀 DATA INGESTION: THU THẬP TỪ KHÓA THÔ TỪ GOOGLE SUGGEST</span>
+                        </div>
+                    `);
+                    return;
+                }
+                if (trimmed.includes('[TẦNG 2 - PRE-FILTERING]')) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-phase-banner t2">
+                            <span class="phase-tag">TẦNG 2</span>
+                            <span class="phase-title">⚡ PRE-FILTERING: LỌC SWEET SPOT & CHẶN CÁC CHUỖI BÁN LẺ LỚN</span>
+                        </div>
+                    `);
+                    return;
+                }
+                if (trimmed.includes('[TẦNG 3 - AI INTELLIGENCE]')) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-phase-banner t3">
+                            <span class="phase-tag">TẦNG 3</span>
+                            <span class="phase-title">🤖 AI INTELLIGENCE: GEMINI FLASH PHÂN TÍCH BÓC TÁCH CƠ HỘI</span>
+                        </div>
+                    `);
+                    return;
+                }
+                if (trimmed.includes('HOÀN TẤT TOÀN BỘ PIPELINE 4 TẦNG THÀNH CÔNG')) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-phase-banner done">
+                            <span class="phase-tag">HOÀN TẤT</span>
+                            <span class="phase-title">🎉 TOÀN BỘ PIPELINE 4 TẦNG ĐÃ XONG! CÁC CƠ HỘI MỚI ĐÃ CẤT VÀO SQLITE</span>
+                        </div>
+                    `);
+                    return;
+                }
+
+                // 2. Custom Prompt notification
+                if (trimmed.includes('[CUSTOM PROMPT]') || trimmed.includes('[PROMPT ĐỊNH HƯỚNG]') || trimmed.includes('[ĐỊNH HƯỚNG BỞI USER]')) {
+                    const cleanP = trimmed.replace(/.*\[.*?\]:?/, '').replace(/["']/g, '').trim();
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-prompt-box">
+                            <span>🎯</span>
+                            <span><b>Định hướng chủ đề:</b> "${cleanP}"</span>
+                        </div>
+                    `);
+                    return;
+                }
+
+                // 3. AI Opportunity Evaluated Row
+                // Match: [1/15] 'kem bôi eczema' -> Score: 3.2/10 | BÁN ĐƯỢC | Kem bôi Eczema
+                const oppMatch = trimmed.match(/\\[(\\d+\\/\\d+)\\]\\s*'([^']+)'\\s*->\\s*Score:\\s*([\\d\\.]+)\\/10\\s*\\|\\s*(.*?)\\|\\s*(.*)/);
+                if (oppMatch) {
+                    const idx = oppMatch[1];
+                    const kw = oppMatch[2];
+                    const score = parseFloat(oppMatch[3]);
+                    const sellText = oppMatch[4].trim();
+                    const entity = oppMatch[5].trim();
+                    const isSell = sellText.includes('BÁN ĐƯỢC');
+
+                    let scoreClass = 'dim';
+                    if (score >= 8.0) scoreClass = 'gold';
+                    else if (score >= 6.0) scoreClass = 'green';
+
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-opp-row">
+                            <span class="log-idx">[#${idx}]</span>
+                            <span class="log-kw">"${kw}"</span>
+                            <span style="color: var(--text-dim);">➔</span>
+                            <span class="log-score ${scoreClass}">⭐ ${score.toFixed(1)}/10</span>
+                            <span class="log-sell-tag ${isSell ? 'sell-yes' : 'sell-no'}">${isSell ? '✓ BÁN ĐƯỢC' : '✗ KHÔNG BÁN'}</span>
+                            <span class="log-entity" title="${entity}">${entity}</span>
+                        </div>
+                    `);
+                    return;
+                }
+
+                // 4. Seed suggestions harvest row
+                // Match: [1/20] Seed: 'serum peel da' -> Thu được 6 gợi ý (6 mới)
+                const seedMatch = trimmed.match(/\\[(\\d+\\/\\d+)\\]\\s*Seed:\\s*'([^']+)'\\s*->\\s*Thu được\\s*(\\d+)\\s*gợi ý\\s*\\((\\d+)\\s*mới\\)/);
+                if (seedMatch) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div class="log-seed-row">
+                            <span class="seed-idx">[Seed ${seedMatch[1]}]</span>
+                            <span class="seed-text">"${seedMatch[2]}"</span>
+                            <span style="color: var(--text-dim);">➔</span>
+                            <span class="seed-badge">+${seedMatch[4]} từ khóa mới</span>
+                        </div>
+                    `);
+                    return;
+                }
+
+                // 5. Pre-filtering stats
+                if (trimmed.includes('Số từ khóa vượt qua vòng lọc') || trimmed.includes('Số từ khóa bị loại bỏ')) {
+                    el.insertAdjacentHTML('beforeend', `
+                        <div style="background: rgba(168, 85, 247, 0.08); padding: 5px 10px; border-radius: 6px; font-size: 11.5px; color: #d8b4fe;">
+                            ${trimmed}
+                        </div>
+                    `);
+                    return;
+                }
+
+                // 6. Generic system line
+                el.insertAdjacentHTML('beforeend', `
+                    <div class="log-line">
+                        <span class="log-time">${time}</span>
+                        <span>${trimmed}</span>
+                    </div>
+                `);
+            });
+
+            el.scrollTop = el.scrollHeight;
+            } catch (err) {
+                console.error('Error in appendLog:', err);
+            }
+        }
+
+        function clearConsole() {
+            document.getElementById('consoleBody').innerHTML = `
+                <div class="log-phase-banner t3">
+                    <span class="phase-tag">CLEARED</span>
+                    <span class="phase-title">=== ĐÃ LÀM SẠCH NHẬT KÝ THỜI GIAN THỰC ===</span>
+                </div>
+            `;
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        async function refreshStats() {
+            if (!window.pywebview || !window.pywebview.api) return;
+            const res = await window.pywebview.api.get_stats(activeSessionId);
+            document.getElementById('mRaw').innerText = res.total_raw_keywords.toLocaleString();
+            document.getElementById('mFiltered').innerText = (res.total_raw_keywords - res.filtered_out).toLocaleString();
+            document.getElementById('mAnalyzed').innerText = res.analyzed_opportunities.toLocaleString();
+            document.getElementById('mGems').innerText = res.sweet_spot_gems.toLocaleString();
+        }
+
+        async function loadSettings() {
+            if (!window.pywebview || !window.pywebview.api) return;
+            const cfg = await window.pywebview.api.get_settings();
+            document.getElementById('inputGeminiKey').value = cfg.gemini_key || '';
+            document.getElementById('selectModel').value = cfg.gemini_model || 'gemini-3.8-flash';
+            document.getElementById('inputSerperKey').value = cfg.serper_key || '';
+            document.getElementById('dbPathHint').innerText = 'Vị trí: ' + cfg.db_path;
+
+            const badge = document.getElementById('statusBadge');
+            const txt = document.getElementById('statusText');
+            if (cfg.gemini_key) {
+                badge.className = 'nav-status';
+                txt.innerText = 'Gemini 3.8 Flash: Sẵn Sàng';
+            } else {
+                badge.className = 'nav-status dry';
+                txt.innerText = 'Chế độ Dry-Run (Chưa nhập key)';
+            }
+        }
+
+        async function saveSettings() {
+            const key = document.getElementById('inputGeminiKey').value.trim();
+            const model = document.getElementById('selectModel').value;
+            const serper = document.getElementById('inputSerperKey').value.trim();
+
+            await window.pywebview.api.save_settings(key, model, serper);
+            alert('Đã lưu cấu hình thành công!');
+            loadSettings();
+        }
+
+        // LOAD TOPIC / SESSIONS VÀO DROPDOWN
+        async function loadTopics() {
+            if (!window.pywebview || !window.pywebview.api) return;
+            const topics = await window.pywebview.api.get_topics();
+            const dropdown = document.getElementById('selectTopicFilter');
+            dropdown.innerHTML = '<option value="all">💎 Tất cả chủ đề (Toàn bộ kho dữ liệu)</option>';
+
+            topics.forEach((t, idx) => {
+                const opt = document.createElement('option');
+                opt.value = t.session_id;
+                const isNewest = idx === 0 ? ' [Mới nhất]' : '';
+                opt.innerText = `🎯${isNewest} ${t.topic_name} (${t.total_items} cơ hội)`;
+                dropdown.appendChild(opt);
+            });
+
+            // Nếu activeSessionId tồn tại thì chọn nó
+            if (activeSessionId && activeSessionId !== 'all') {
+                dropdown.value = activeSessionId;
+            }
+        }
+
+        async function loadOpportunities() {
+            if (!window.pywebview || !window.pywebview.api) return;
+            const minScore = parseFloat(document.getElementById('sliderScore').value);
+            const query = document.getElementById('searchInput').value.trim();
+            const selectVal = document.getElementById('selectTopicFilter').value;
+            activeSessionId = selectVal;
+
+            const items = await window.pywebview.api.get_opportunities(minScore, query, selectVal);
+            const container = document.getElementById('cardsList');
+            container.innerHTML = '';
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px 20px; color: var(--text-muted); background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border);">
+                        <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text-main);">Không tìm thấy cơ hội nào thuộc bộ lọc này</div>
+                        <div style="font-size: 12px; margin-top: 4px;">Hãy thử giảm mức điểm tối thiểu, chọn "Tất cả chủ đề", hoặc sang Tab 1 chạy quét đợt mới.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            items.forEach(it => {
+                const isHigh = it.opportunity_score >= 8.0;
+                const card = document.createElement('div');
+                card.className = 'opp-card';
+                card.innerHTML = `
+                    <div class="opp-card-header">
+                        <div class="opp-title-box">
+                            <span class="badge-score ${isHigh ? 'high' : ''}">⭐ ${it.opportunity_score.toFixed(1)}/10</span>
+                            <span class="opp-entity-name">${it.entity_name || 'Chưa rõ tên'}</span>
+                        </div>
+                        <div class="opp-badges">
+                            ${it.topic ? `<span class="badge-topic">🏷️ ${it.topic}</span>` : ''}
+                            <span class="badge-tag">${it.category}</span>
+                            <span class="badge-tag" style="color: var(--accent-blue);">${it.search_intent}</span>
+                        </div>
+                    </div>
+                    <div class="opp-keyword">🔍 Từ khóa: "${it.keyword}"</div>
+                    <div class="opp-summary">${it.ai_summary}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function deleteCurrentTopic() {
+            const dropdown = document.getElementById('selectTopicFilter');
+            const sessId = dropdown.value;
+            if (sessId === 'all') {
+                alert('Vui lòng chọn một chủ đề cụ thể trong dropdown để xóa!');
+                return;
+            }
+
+            const topicName = dropdown.options[dropdown.selectedIndex].text;
+            if (confirm(`Bạn có chắc chắn muốn xóa toàn bộ từ khóa và sản phẩm thuộc đợt:\\n"${topicName}"?`)) {
+                await window.pywebview.api.delete_topic(sessId);
+                activeSessionId = 'all';
+                await loadTopics();
+                await loadOpportunities();
+                refreshStats();
+                alert('Đã xóa thành công đợt quét!');
+            }
+        }
+
+        async function startFullPipeline() {
+            if (isRunning) return;
+            isRunning = true;
+            document.getElementById('runSpinner').style.display = 'inline-block';
+            document.getElementById('runText').innerText = 'ĐANG XỬ LÝ...';
+            document.getElementById('btnRunAll').disabled = true;
+
+            const seeds = parseInt(document.getElementById('sliderSeeds').value);
+            const aiLimit = parseInt(document.getElementById('sliderAi').value);
+            const customPrompt = document.getElementById('customPromptInput').value.trim();
+
+            await window.pywebview.api.start_pipeline(seeds, aiLimit, customPrompt);
+        }
+
+        function onPipelineFinished(newSessionId, newTopic) {
+            isRunning = false;
+            document.getElementById('runSpinner').style.display = 'none';
+            document.getElementById('runText').innerText = '▶ CHẠY TOÀN BỘ 4 TẦNG';
+            document.getElementById('btnRunAll').disabled = false;
+            activeSessionId = newSessionId;
+            refreshStats();
+
+            // Thêm card chuyển tab trực quan ngay trong Console
+            const el = document.getElementById('consoleBody');
+            el.insertAdjacentHTML('beforeend', `
+                <div class="log-switch-card">
+                    <div>
+                        <div style="font-weight: 700; color: var(--primary);">🎯 Đã phân tích xong chủ đề: "${newTopic}"</div>
+                        <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Dữ liệu đã được lưu trữ riêng biệt, không bị lẫn với các từ khóa cũ.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchTab('database')">👉 Mở Kho Cơ Hội Xem Ngay</button>
+                </div>
+            `);
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // XUẤT CSV VÀ HIỂN THỊ MODAL ĐƯỜNG DẪN RÕ RÀNG
+        async function exportCsv() {
+            const dropdown = document.getElementById('selectTopicFilter');
+            const sessId = dropdown ? dropdown.value : activeSessionId;
+            let topicName = '';
+            if (dropdown && dropdown.selectedIndex >= 0 && sessId !== 'all') {
+                topicName = dropdown.options[dropdown.selectedIndex].text.replace(/^[🎯💎\s]+/, '').split('(')[0].trim();
+            }
+
+            const res = await window.pywebview.api.export_csv(sessId, topicName);
+            latestExportedPath = res.filepath;
+            latestExportedFolder = res.folder;
+
+            document.getElementById('exportFolderText').innerText = res.folder;
+            document.getElementById('exportFileText').innerText = `${res.filename} (${res.count} cơ hội sản phẩm)`;
+            document.getElementById('exportModal').classList.add('show');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('show');
+        }
+
+        async function openExportFolder() {
+            if (latestExportedFolder) {
+                await window.pywebview.api.open_folder(latestExportedFolder);
+            }
+        }
+
+        async function openExportedFile() {
+            if (latestExportedPath) {
+                await window.pywebview.api.open_file(latestExportedPath);
+            }
+        }
+
+        async function openDatabaseFolder() {
+            await window.pywebview.api.open_folder();
+        }
+
+        async function resetDatabase() {
+            if (confirm('Bạn có chắc chắn muốn xóa toàn bộ từ khóa và sản phẩm trong SQLite?')) {
+                await window.pywebview.api.reset_db();
+                activeSessionId = 'all';
+                await loadTopics();
+                refreshStats();
+                loadOpportunities();
+                alert('Đã làm sạch database!');
+            }
+        }
+
+        async function initApp() {
+            try {
+                if (!window.pywebview || !window.pywebview.api) return;
+                if (window.pywebview.api.set_ready) {
+                    await window.pywebview.api.set_ready();
+                }
+                await refreshStats();
+                await loadSettings();
+                await loadTopics();
+                await loadOpportunities();
+            } catch (e) {
+                console.error('Lỗi khi khởi động nạp dữ liệu:', e);
+            }
+        }
+
+        // Kiểm tra sẵn sàng bằng cả event pywebviewready và polling interval an toàn
+        if (window.pywebview && window.pywebview.api) {
+            initApp();
+        } else {
+            window.addEventListener('pywebviewready', initApp);
+            let pollCount = 0;
+            const pollTimer = setInterval(() => {
+                pollCount++;
+                if (window.pywebview && window.pywebview.api) {
+                    clearInterval(pollTimer);
+                    initApp();
+                } else if (pollCount > 40) {
+                    clearInterval(pollTimer);
+                    const txt = document.getElementById('statusText');
+                    if (txt) txt.innerText = 'Đã kết nối giao diện';
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
